@@ -11,6 +11,10 @@ An elegant, hyper-minimalistic iOS todo list app that persistently nags you with
 - **Real-time Countdown**: See exactly when your next nag is coming
 - **Completion Tracking**: Completed tasks are clearly separated from pending ones
 
+## Screenshot
+
+![Nag App Screenshot](assets/screenshot.png)
+
 ## How It Works
 
 1. Add a task with a title and choose how often you want to be reminded
