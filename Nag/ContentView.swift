@@ -28,9 +28,11 @@ struct ContentView: View {
 
 class TodoStore: ObservableObject {
     @Published var items: [TodoItem] = []
+    private static let storageKey = "todoItems"
     
     init() {
         loadItems()
+        rescheduleNotifications()
     }
     
     func addItem(_ item: TodoItem) {
@@ -59,14 +61,20 @@ class TodoStore: ObservableObject {
     
     private func saveItems() {
         if let encoded = try? JSONEncoder().encode(items) {
-            UserDefaults.standard.set(encoded, forKey: "todoItems")
+            UserDefaults.standard.set(encoded, forKey: TodoStore.storageKey)
         }
     }
     
     private func loadItems() {
-        if let data = UserDefaults.standard.data(forKey: "todoItems"),
+        if let data = UserDefaults.standard.data(forKey: TodoStore.storageKey),
            let decoded = try? JSONDecoder().decode([TodoItem].self, from: data) {
             items = decoded
+        }
+    }
+    
+    private func rescheduleNotifications() {
+        for item in items where !item.isCompleted {
+            NotificationManager.scheduleNotification(for: item)
         }
     }
 }

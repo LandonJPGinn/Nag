@@ -2,6 +2,9 @@ import SwiftUI
 
 struct TodoListView: View {
     @ObservedObject var todoStore: TodoStore
+    @State private var currentTime = Date()
+    
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var pendingItems: [TodoItem] {
         todoStore.items.filter { !$0.isCompleted }
@@ -16,7 +19,7 @@ struct TodoListView: View {
             if !pendingItems.isEmpty {
                 Section {
                     ForEach(pendingItems) { item in
-                        TodoRowView(item: item, todoStore: todoStore)
+                        TodoRowView(item: item, todoStore: todoStore, currentTime: currentTime)
                     }
                     .onDelete { indexSet in
                         indexSet.forEach { index in
@@ -29,7 +32,7 @@ struct TodoListView: View {
             if !completedItems.isEmpty {
                 Section(header: Text("Completed").font(.headline).foregroundColor(.secondary)) {
                     ForEach(completedItems) { item in
-                        TodoRowView(item: item, todoStore: todoStore)
+                        TodoRowView(item: item, todoStore: todoStore, currentTime: currentTime)
                     }
                     .onDelete { indexSet in
                         indexSet.forEach { index in
@@ -57,14 +60,16 @@ struct TodoListView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .onReceive(timer) { time in
+            currentTime = time
+        }
     }
 }
 
 struct TodoRowView: View {
     let item: TodoItem
     @ObservedObject var todoStore: TodoStore
-    @State private var timeRemaining: String = ""
-    @State private var timer: Timer?
+    let currentTime: Date
     
     var body: some View {
         HStack(spacing: 16) {
@@ -93,23 +98,19 @@ struct TodoRowView: View {
             Spacer()
         }
         .padding(.vertical, 8)
-        .onAppear {
-            updateTimeRemaining()
-            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                updateTimeRemaining()
-            }
-        }
-        .onDisappear {
-            timer?.invalidate()
-        }
     }
     
-    private func updateTimeRemaining() {
-        let elapsed = Date().timeIntervalSince(item.createdAt)
-        let nextNotification = item.reminderInterval - elapsed.truncatingRemainder(dividingBy: item.reminderInterval)
+    private var timeRemaining: String {
+        let elapsed = currentTime.timeIntervalSince(item.createdAt)
+        let remainder = elapsed.truncatingRemainder(dividingBy: item.reminderInterval)
+        let nextNotification = item.reminderInterval - remainder
+        
+        guard nextNotification >= 0 else {
+            return "Next nag soon"
+        }
         
         let minutes = Int(nextNotification) / 60
         let seconds = Int(nextNotification) % 60
-        timeRemaining = String(format: "Next nag in %d:%02d", minutes, seconds)
+        return String(format: "Next nag in %d:%02d", minutes, seconds)
     }
 }

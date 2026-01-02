@@ -24,7 +24,6 @@ class NotificationManager: NSObject, ObservableObject, UNUserNotificationCenterD
         content.title = "Nag Reminder"
         content.body = "Don't forget: \(item.title)"
         content.sound = .default
-        content.badge = 1
         
         let trigger = UNTimeIntervalNotificationTrigger(
             timeInterval: item.reminderInterval,
