@@ -14,3 +14,20 @@ DerivedData/
 !default.mode2v3
 !default.perspectivev3
 .swiftpm/
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Media files
+*.mp3
+*.mp4
+*.mov
+*.avi
+*.wav
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg

@@ -32,6 +32,24 @@ An elegant, hyper-minimalistic iOS todo list app that persistently nags you with
 
 Open `Nag.xcodeproj` in Xcode and run on a simulator or device.
 
+## Backend API
+
+This project includes a Python-based backend API using FastAPI.
+
+### Running the Backend
+
+1. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Run the server:**
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+The API will be available at `http://127.0.0.1:8000`.
+
 ## Privacy
 
 All data is stored locally on your device. No data is sent to any servers.
