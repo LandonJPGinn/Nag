@@ -14,3 +14,8 @@ DerivedData/
 !default.mode2v3
 !default.perspectivev3
 .swiftpm/
+
+# Python
+__pycache__/
+*.pyc
+.env
