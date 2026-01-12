@@ -19,3 +19,15 @@ DerivedData/
 __pycache__/
 *.pyc
 .env
+
+# Media files
+*.mp3
+*.mp4
+*.mov
+*.avi
+*.wav
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
